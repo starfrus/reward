@@ -1,4 +1,4 @@
-module babysteps
+module rewardapp
 
 go 1.26.5
 

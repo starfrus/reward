@@ -17,7 +17,7 @@ type Config struct {
 type AppConfig struct {
 	Env      string `env:"ENV" envDefault:"development"`
 	Port     string `env:"PORT" envDefault:"8080"`
-	Name     string `env:"NAME" envDefault:"baby-steps"`
+	Name     string `env:"NAME" envDefault:"rewardApp"`
 	TimeZone string `env:"TIMEZONE" envDefault:"UTC"`
 }
 

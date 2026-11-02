@@ -1,7 +1,7 @@
 package main
 
 import (
-	"babysteps/internal/infra/config"
+	"rewardapp/internal/infra/config"
 	"fmt"
 	"os"
 )
@@ -13,6 +13,6 @@ func main() {
 		fmt.Printf("err: %v\n", err.Error())
 		os.Exit(1)
 	}
-	fmt.Println("Baby steps server starting")
+	fmt.Println("REWARD APP server starting")
 	fmt.Printf("Port: localhost:%s\n", config.AppConfig.Port)
 }
