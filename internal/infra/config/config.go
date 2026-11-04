@@ -33,7 +33,7 @@ type DataBaseConfig struct {
 
 type LoggerConfig struct {
 	Level        string `env:"LEVEL" envDefault:"DEBUG"`
-	LoggerFolder string `env:"FOLDER"`
+	LoggerFolder string `env:"FOLDER" envDefault:"/out/logs"`
 }
 
 func Load() (Config, error) {
