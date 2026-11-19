@@ -19,11 +19,11 @@ func NewPostgresDB(cfg config.DataBaseConfig) (*pgx.Conn, error) {
 	)
 	conn, err := pgx.Connect(context.Background(), dsn)
 	if err != nil {
-		return nil, fmt.Errorf("failed connect to database: %w", err)
+		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
 
 	if err := conn.Ping(context.Background()); err != nil {
-		return nil, fmt.Errorf("failed ping to database: %w", err)
+		return nil, fmt.Errorf("failed to ping to database: %w", err)
 	}
 
 	return conn, nil

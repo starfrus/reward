@@ -1,57 +1,47 @@
+.DEFAULT_GOAL := help
 include .env
 export
 
 export PROJECT_ROOT=$(shell pwd)
+MIGRATE_URL = postgres://$(DB_USER):$(DB_PASSWORD)@postgres:5432/$(DB_NAME)?sslmode=disable
+
+help:
+	@awk 'BEGIN {FS = ":.*## "} \
+	     /^[a-zA-Z_-]+:.*## / {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}' \
+	     $(MAKEFILE_LIST)
 
 run: build ## Запустить приложение
-	@./bin/main
+	@$(PROJECT_ROOT)/bin/main
 
-build: ## Сборать проект
+build: ## Сборка проект
 	@go build -o bin/main cmd/app/main.go
 
 clean: ## Удалить артефакты сборки
 	@read -p "Удалить артефакты сборки? Опасность утери данных. [y/N]: " ans; \
 	if [ "$$ans" = "y" ]; then \
-		rm -rf bin out/pgdata && \
+		rm -rf bin && \
 		echo "Артефакты сборки удалены"; \
 	else \
 		echo "Удаление артефактов сборки отменена"; \
 	fi
 
-migrate-create: ## Создать миграцию
+migrate-create: ## Создать миграцию локально: make migrate-create seq=init
 	@if [ -z "$(seq)" ]; then \
 		echo "Не указан параметр seq. Пример: make migrate-create seq=init"; \
 		exit 1; \
 	fi; \
-	docker compose run migrate-postgres
-	migrate create \
-	-ext sql \
-	-dir ./migrations \
-	-seq "$(seq)"
+	migrate create -ext sql -dir ./migrations -seq "$(seq)"
 
-migrate-up: ## Поднять миграции все
-	docker compose up -d migrate
+migrate-up: ## Применить одну миграцию
+	docker compose run --rm migrate -path /migrations -database "$(MIGRATE_URL)" up 1
 
-db-up:
+migrate-down: ## Откатить одну миграцию
+	docker compose run --rm migrate -path /migrations -database "$(MIGRATE_URL)" down 1
+
+postgres-up: ## Поднять БД
 	docker compose up -d postgres
 
-db-down:
-	docker compose down postgres
+postgres-down: ## Остановить БД
+	docker compose stop postgres
 
-db-logs:
-	docker compose logs -f
-
-migrate-create-local: ## Создать миграцию локально
-	@if [ -z "$(seq)" ]; then \
-		echo "Не указан параметр seq. Пример: make migrate-create-local seq=init"; \
-		exit 1; \
-	fi; \
-	migrate create \
-	-ext sql \
-	-dir ./migrations \
-	-seq "$(seq)"
-
-
-
-	
-
+.PHONY: help run build clean migrate-create migrate-up postgres-up postgres-down

@@ -10,7 +10,7 @@ import (
 
 type Config struct {
 	AppConfig      AppConfig      `envPrefix:"APP_"`
-	DatabaseConfig DataBaseConfig `envPrefix:"DB_"`
+	DataBaseConfig DataBaseConfig `envPrefix:"DATABASE_"`
 	LoggerConfig   LoggerConfig   `envPrefix:"LOGGER_"`
 }
 
@@ -32,7 +32,7 @@ type DataBaseConfig struct {
 }
 
 type LoggerConfig struct {
-	Level string `env:"LEVEL" envDefault:"DEBUG"`
+	Level string `env:"LEVEL" envDefault:"INFO"`
 }
 
 func Load() (Config, error) {
