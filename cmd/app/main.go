@@ -1,18 +1,25 @@
 package main
 
 import (
-	"rewardapp/internal/infra/config"
-	"fmt"
-	"os"
+	"context"
+	"log"
+
+	"rewardapp/internal/core/config"
+	"rewardapp/internal/core/postgres"
 )
 
 func main() {
-	
-	config, err := config.Load()
+
+	cfg, err := config.Load()
 	if err != nil {
-		fmt.Printf("err: %v\n", err.Error())
-		os.Exit(1)
+		log.Fatalf("Failed load config: %v", err)
 	}
-	fmt.Println("REWARD APP server starting")
-	fmt.Printf("Port: localhost:%s\n", config.AppConfig.Port)
+
+	db, err := postgres.NewPostgresDB(cfg.DataBaseConfig)
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+	defer db.Close(context.Background())
+	log.Println("Successfully connected to PostgreSQL")
+
 }
