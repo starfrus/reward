@@ -3,7 +3,7 @@ include .env
 export
 
 export PROJECT_ROOT=$(shell pwd)
-MIGRATE_URL = postgres://$(DB_USER):$(DB_PASSWORD)@postgres:5432/$(DB_NAME)?sslmode=disable
+MIGRATE_URL = postgres://$(DATABASE_USER):$(DATABASE_PASSWORD)@postgres:5432/$(DATABASE_NAME)?sslmode=disable
 
 help:
 	@awk 'BEGIN {FS = ":.*## "} \
